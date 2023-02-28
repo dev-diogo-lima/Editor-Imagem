@@ -6,6 +6,8 @@ import time
 class Imagem:
     def __init__(self, path_imagem):
         self.imagem = Image.open(path_imagem)
+        self.imagem = self.imagem.convert('RGB')
+        self.nome_imagem = path_imagem.split('/')[-1]
 
     def brilho(self, qtde):
         array_imagem = np.array(self.imagem, dtype=np.uint16)
@@ -26,7 +28,7 @@ class Imagem:
     def rotacao(self, graus, fill='black'):
         self.imagem = self.imagem.rotate(graus, expand=True, fillcolor=fill)
 
-    def export(self, novo_nome):
+    def export(self, novo_nome=None):
         pasta_output = Path.cwd() / 'output'
         pasta_output.mkdir(exist_ok=True)
 
@@ -43,9 +45,11 @@ class Imagem:
 
     
 if __name__ == '__main__':
-    img = Imagem('./assets/panda.png')
+    img = Imagem('./assets/G1 Ponto2_300mT_2.png')
+    array = np.array(img.imagem)
+    print(np.amax(array), np.amin(array))
     # img.brilho(30)
     # img.preto_e_branco()
-    # img.contraste(30, 200)
-    img.rotacao(-87)
-    img.imagem.show()
+    img.contraste(60, 170)
+    img.export()
+    # img.rotacao(-87)

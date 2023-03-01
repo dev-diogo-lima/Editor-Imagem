@@ -39,9 +39,13 @@ class Imagem:
         self.imagem.save(pasta_output / novo_nome)
         return None
 
-    def get_figura(self):
+    def get_figura(self) -> ImageTk.PhotoImage:
         self.figura = ImageTk.PhotoImage(self.imagem)
         return self.figura
+    
+    def ajuste_tamanho(self, width, lenght, pad) -> None:
+        self.imagem = ImageOps.contain(image=self.imagem, size=(width - pad, lenght - pad))
+        return None
 
     
 if __name__ == '__main__':

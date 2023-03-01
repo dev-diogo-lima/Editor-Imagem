@@ -1,1 +1,1 @@
-from classes.imagem import Image
+from classes.imagem import Imagem

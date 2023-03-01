@@ -11,7 +11,7 @@ class FrameControles(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
 
-        self.var_brilho = tk.StringVar(value='0')
+        self.var_nome_arquivo = tk.StringVar(value='Nome Imagem')
         self.flag_imagem = False
 
         self.grid_columnconfigure(1, weight=1)
@@ -19,16 +19,18 @@ class FrameControles(ttk.Frame):
 
         label_original = ttk.Label(self, text='Imagem Original', padding=(5, 0), style='MainText.TLabel')
         frame_pad = ttk.Frame(self, width=3, style='Espacador.TFrame')
-        label_brilho = ttk.Label(self, text='Brilho:')
-        dlabel_brilho = ttk.Label(self, textvariable=self.var_brilho)
+        label_nome_imagem = ttk.Label(self, textvariable=self.var_nome_arquivo, padding=(5, 0, 5, 5), style='MainText.TLabel')
+        # label_brilho = ttk.Label(self, text='Brilho:')
+        # dlabel_brilho = ttk.Label(self, textvariable=self.var_brilho)
         
         frame_pad.grid(row=0, column=0, rowspan=4, sticky='nsw')
         label_original.grid(row=0, column=1, padx=20, pady=(10, 0), sticky='sw')
-        label_brilho.grid(row=2, column=1, sticky='we')
-        dlabel_brilho.grid(row=3, column=1, sticky='we')
+        label_nome_imagem.grid(row=2, column=1, padx=20, pady=(0, 10), sticky='ne')
+        # label_brilho.grid(row=2, column=1, sticky='we')
+        # dlabel_brilho.grid(row=3, column=1, sticky='we')
         
         self.frame_imagem_original = ttk.Frame(self, style='FrameImagens.TFrame')
-        self.frame_imagem_original.grid(row=1, column=1, padx=20, pady=(0, 20), sticky='nsew')
+        self.frame_imagem_original.grid(row=1, column=1, padx=20, pady=0, sticky='nsew')
         self.frame_imagem_original.grid_columnconfigure(0, weight=1)
         self.frame_imagem_original.grid_rowconfigure(0, weight=1)
 
@@ -46,6 +48,7 @@ class FrameControles(ttk.Frame):
 
     def func_abrir(self, file: str):
         self.flag_imagem = True
+        self.var_nome_arquivo.set(file.split('/')[-1])
         self.imagem = Image.open(file)
         self._reajustar_imagem()
         self.figura = ImageTk.PhotoImage(self.imagem)

@@ -9,7 +9,7 @@ from utils import *
 
 
 from frames import FrameScroll, FrameFerramentas, FrameControles, FrameCanvas
-from classes import Image
+from classes import Imagem
 
 class MainWindow(tk.Tk):
     def __init__(self, *args, **kwargs):

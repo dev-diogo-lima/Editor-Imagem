@@ -8,7 +8,7 @@ ctypes.windll.shcore.SetProcessDpiAwareness(1)
 from utils import *
 
 
-from frames import FrameScroll, FrameFerramentas, FrameControles, FrameCanvas
+from frames import FrameScroll, FrameFerramentas, FrameControles, FrameCanvas, FrameDisplay
 from classes import Imagem
 
 class MainWindow(tk.Tk):
@@ -43,28 +43,17 @@ class MainWindow(tk.Tk):
         self.frame_controles = FrameControles(self.frame_principal, style='Controls.TFrame')
         self.frame_controles.grid(row=1, column=1, sticky='nwse')
 
-        self.frame_imagem = FrameCanvas(self.frame_principal, style='FrameImagens.TFrame')
-        self.frame_imagem.grid(row=1, column=0, sticky='nswe', padx=50, pady=50)
+        self.frame_display = FrameDisplay(self.frame_principal, style='FrameImagens.TFrame')
+        self.frame_display.grid(row=1, column=0, sticky='nswe', padx=50, pady=50)
 
-        self.frame_ferramentas = FrameFerramentas(self.frame_principal, self.frame_controles.func_abrir, self.frame_imagem.salvar_imagem, self.frame_imagem.carregar_imagem, style='ToolBar.TFrame')
+        self.frame_ferramentas = FrameFerramentas(self.frame_principal, self.frame_controles.carregar_imagem, self.frame_display.frame_canvas.salvar_imagem, self.frame_display.frame_canvas.carregar_imagem, style='ToolBar.TFrame')
         self.frame_ferramentas.grid(row=0, column=0, columnspan=2, sticky='nwe')
 
-        # label = ttk.Label(self.frame_principal, text='Place Holder')
-        # label.grid(row=1, column=0, sticky='we')
-        
+        self.bind_all('<Configure>', self.ajustes_tamanho)
 
-        # self.frame_display = ttk.Frame(self, style='Bg.TFrame')
-        # self.frame_display.grid(row=0, column=0, sticky='nsew')
-        # self.frame_display.grid_columnconfigure(0, weight=1)
-        # self.frame_display.grid_rowconfigure(0, weight=1)
-
-        # self.sframe_display = FrameScroll(self.frame_display)
-        # self.sframe_display.grid(row=0, column=0, sticky='nsew')
-
-        # imagem = Image.open(r'assets\panda.png').resize((800, 600))
-        # self.figura = ImageTk.PhotoImage(imagem)
-        # self.sframe_display.canvas.create_image((0, 0), image=self.figura, tag='panda')
-        
+    def ajustes_tamanho(self, *args):
+        self.frame_display.frame_canvas.ajuste_tamanho(*args)
+        self.frame_controles.canvas_imagem_original.ajuste_tamanho(*args)
 
 
 if __name__ == '__main__':

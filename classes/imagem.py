@@ -62,6 +62,6 @@ if __name__ == '__main__':
     print(np.amax(array), np.amin(array))
     # img.brilho(30)
     # img.preto_e_branco()
-    img.contraste(60, 170)
-    img.export()
+    img.contraste(0, 255)
+    img.imagem.show()
     # img.rotacao(-87)

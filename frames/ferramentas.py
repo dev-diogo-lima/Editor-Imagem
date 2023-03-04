@@ -4,10 +4,13 @@ from tkinter import filedialog as fd
 from pathlib import Path
 
 class FrameFerramentas(ttk.Frame):
-    def __init__(self, container, func_abrir, func_salvar, func_carregar_imagem, *args, **kwargs):
+    def __init__(self, container, func_carregar_original, func_salvar, func_carregar_imagem, *args, root=None, **kwargs):
         super().__init__(container, *args, **kwargs)
 
-        self.func_abrir = [func_abrir, func_carregar_imagem]
+        self.root = root
+
+        self.func_carregar_original = func_carregar_original
+        self.fun_carregar_imagem = func_carregar_imagem
         self.func_salvar = func_salvar
         self.grid_columnconfigure(2, weight=1)
 
@@ -22,8 +25,8 @@ class FrameFerramentas(ttk.Frame):
 
     def _comando_abrir(self):
         file = fd.askopenfile(title='Selecione a Imagem', initialdir=Path.cwd())
-        self.func_abrir[0](file.name)
-        self.func_abrir[1](file.name)
+        self.func_carregar_original(file.name)
+        self.root.imagem = self.fun_carregar_imagem(file.name)
 
     def _comando_salvar(self):
         self.func_salvar()

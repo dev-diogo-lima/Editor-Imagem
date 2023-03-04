@@ -5,9 +5,16 @@ import time
 
 class Imagem:
     def __init__(self, path_imagem):
+
         self.imagem = Image.open(path_imagem)
-        self.imagem = self.imagem.convert('RGB')
+        self._correcao_modo()
         self.nome_imagem = path_imagem.split('/')[-1]
+
+    def _correcao_modo(self):
+        if self.imagem.mode == 'I':
+            array_32 = np.array(self.imagem)
+            array_8 = np.right_shift(array_32, 8).astype(np.uint8)
+            self.imagem = Image.fromarray(array_8)
 
     def brilho(self, qtde):
         array_imagem = np.array(self.imagem, dtype=np.uint16)

@@ -7,7 +7,7 @@ from PIL import Image, ImageOps
 from classes import Imagem
 
 class FrameCanvas(ttk.Frame):
-    def __init__(self, container: ttk.Frame, *args, **kwargs):
+    def __init__(self, container: ttk.Frame, *args, root=None, **kwargs):
         super().__init__(container, *args, **kwargs)
 
         self.canvas = tk.Canvas(self, highlightthickness=0, borderwidth=0, background=COR_BACKGROUND_IMAGENS)
@@ -18,6 +18,7 @@ class FrameCanvas(ttk.Frame):
         self.imagem = Imagem(caminho_imagem)
         self.imagem.ajuste_tamanho(self.canvas.winfo_width(), self.canvas.winfo_height(), 20)
         self.objeto = self.canvas.create_image((self.winfo_width() / 2, self.winfo_height() / 2), image=self.imagem.get_figura(), anchor='center', tag='imagem')
+        return self.objeto
 
 
     def salvar_imagem(self, nome_arquivo=None):

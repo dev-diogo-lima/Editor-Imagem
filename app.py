@@ -15,6 +15,8 @@ class MainWindow(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.imagem = None
+
         self.title('Editor de Imagem')
         self.minsize(1200, 800)
         self.state('zoomed')
@@ -36,17 +38,17 @@ class MainWindow(tk.Tk):
 
         self.frame_principal = ttk.Frame(self, style='Main.TFrame')
         self.frame_principal.grid(row=0, column=0, sticky='nsew')
-        self.frame_principal.grid_columnconfigure(0, weight=4)
+        self.frame_principal.grid_columnconfigure(0, weight=5)
         self.frame_principal.grid_columnconfigure(1, weight=1)
         self.frame_principal.grid_rowconfigure(1, weight=1)
 
         self.frame_controles = FrameControles(self.frame_principal, style='Controls.TFrame')
         self.frame_controles.grid(row=1, column=1, sticky='nwse')
 
-        self.frame_display = FrameDisplay(self.frame_principal, style='FrameImagens.TFrame')
+        self.frame_display = FrameDisplay(self.frame_principal, root=self, style='FrameImagens.TFrame')
         self.frame_display.grid(row=1, column=0, sticky='nswe', padx=50, pady=50)
 
-        self.frame_ferramentas = FrameFerramentas(self.frame_principal, self.frame_controles.carregar_imagem, self.frame_display.frame_canvas.salvar_imagem, self.frame_display.frame_canvas.carregar_imagem, style='ToolBar.TFrame')
+        self.frame_ferramentas = FrameFerramentas(self.frame_principal, self.frame_controles.carregar_imagem, self.frame_display.frame_canvas.salvar_imagem, self.frame_display.frame_canvas.carregar_imagem, root=self, style='ToolBar.TFrame')
         self.frame_ferramentas.grid(row=0, column=0, columnspan=2, sticky='nwe')
 
         self.bind_all('<Configure>', self.ajustes_tamanho)

@@ -1,7 +1,10 @@
+# pyinstaller canvas/image_display.py --onefile, --windowed
+
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk, ImageOps
 import numpy as np
+from tkinter import filedialog as fd
 
 class CanvasDinamico(tk.Canvas):
     def __init__(self, container, *args, **kwargs):
@@ -18,8 +21,9 @@ class CanvasDinamico(tk.Canvas):
             array_8 = np.right_shift(array_32, 8).astype(np.uint8)
             self.imagem_original = Image.fromarray(array_8)
 
-    def carregar_imagem(self, path):
-        self.setup(path)
+    def carregar_imagem(self):
+        arquivo = fd.askopenfilename()
+        self.setup(arquivo)
         self.atualizar_imagem()
 
     def setup(self, path):
@@ -47,7 +51,7 @@ class CanvasDinamico(tk.Canvas):
     def contraste(self, min: tk.StringVar, max: tk.StringVar):
         minimo , maximo = int(min.get()), int(max.get())
         array_parcial = self.array_imagem.astype(np.int16)
-        array_parcial = 255 / (maximo - minimo) * (array_parcial - minimo)
+        array_parcial = np.divide(255, (maximo - minimo)) * (array_parcial - minimo)
         array_parcial = np.clip(array_parcial, a_min=0, a_max=255)
         self.array_imagem = array_parcial.astype(np.uint8)
 
@@ -69,27 +73,46 @@ class CanvasDinamico(tk.Canvas):
         self.val_contraste_max.set('255')
         self.atualizar_imagem()
 
+    def export(self):
+        file = fd.asksaveasfile()
+        imagem_export = Image.fromarray(self.array_imagem)
+        imagem_export.save(file.name)
+
+
 if __name__ == '__main__':
     root = tk.Tk()
     style = ttk.Style(root)
 
-    style.theme_use('clam')
+    root.grid_columnconfigure([0, 1, 2], weight=1)
+    root.grid_rowconfigure(0, weight=1)
 
-    canvas = CanvasDinamico(root, background='red')
-    canvas.carregar_imagem('./assets/panda.png')
-    canvas.atualizar_imagem()
-    canvas.pack()     
+    canvas = CanvasDinamico(root)
+    canvas.grid(row=0, column=0, columnspan=3, sticky='nswe')
 
-    botao_carregar = ttk.Button(root, text='carregar', command=lambda: canvas.carregar_imagem('./assets/panda.png'))
-    botao_carregar.pack()
+    frame_sliders = ttk.Frame(root)   
+    frame_sliders.grid(row=2, column=0, columnspan=3, sticky='nswe')
+    frame_sliders
+    frame_sliders.grid_columnconfigure(1, weight=1)
+
+    botao_carregar = ttk.Button(root, text='carregar', command=canvas.carregar_imagem)
+    botao_carregar.grid(row=1, column=0)
     botao_atualizar = ttk.Button(root, text='Reset', command=canvas.reset)
-    botao_atualizar.pack()
-    slider_brilho = tk.Scale(root, orient='horizontal', from_=-255, to=255, variable=canvas.val_brilho, digits=1, command=canvas.atualizar_imagem, resolution=2, showvalue=False)
-    slider_brilho.pack()
-    # slider_contraste_min = ttk.Scale(root, orient='horizontal', from_=0, to=255, variable=canvas.val_contraste_min, command=canvas.atualizar_imagem)
-    # slider_contraste_min.pack()
-    # slider_contraste_max = ttk.Scale(root, orient='horizontal', from_=0, to=255, variable=canvas.val_contraste_max, command=canvas.atualizar_imagem)
-    # slider_contraste_max.pack()
+    botao_atualizar.grid(row=1, column=1)
+    botao_export = ttk.Button(root, text='Export', command=canvas.export)
+    botao_export.grid(row=1, column=2)
+
+    label_brilho = ttk.Label(frame_sliders, text='Brilho: ')
+    label_brilho.grid(row=0, column=0, sticky='w')
+    slider_brilho = tk.Scale(frame_sliders, orient='horizontal', from_=-255, to=255, variable=canvas.val_brilho, digits=1, command=canvas.atualizar_imagem, resolution=2, showvalue=False)
+    slider_brilho.grid(row=0, column=1, sticky='we')
+    label_contraste_min = ttk.Label(frame_sliders, text='contraste_min: ')
+    label_contraste_min.grid(row=1, column=0, sticky='w')
+    slider_contraste_min = tk.Scale(frame_sliders, orient='horizontal', from_=0, to=255, variable=canvas.val_contraste_min, digits=1, command=canvas.atualizar_imagem, resolution=2, showvalue=False)
+    slider_contraste_min.grid(row=1, column=1, sticky='we')
+    label_contraste_max = ttk.Label(frame_sliders, text='contraste_min: ')
+    label_contraste_max.grid(row=2, column=0, sticky='w')
+    slider_contraste_max = tk.Scale(frame_sliders, orient='horizontal', from_=1, to=255, variable=canvas.val_contraste_max, digits=1, command=canvas.atualizar_imagem, resolution=2, showvalue=False)
+    slider_contraste_max.grid(row=2, column=1, sticky='we')
 
 
     root.mainloop()

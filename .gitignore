@@ -1,0 +1,8 @@
+# Ignorar arquivos gerados de executavel
+/Lite
+
+# Ignorar arquivos resultantes
+/output/*
+
+# Ignorar pycaches
+**/__pycache__

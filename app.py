@@ -30,7 +30,7 @@ class MainWindow(tk.Tk):
         self.style.configure('Espacador.TFrame', background=COR_ESPACADOR)
 
         self.style.configure('ToolBar.TFrame', background=COR_BACKGROUND_TOOLBAR)
-        self.style.configure('ToolBar.TButton' ,relief='flat', background=COR_BACKGROUND_TOOLBAR, foreground=COR_FOREGROUND_TOOLBAR, font=('Segoe Ui', 10, 'bold'))
+        self.style.configure('ToolBar.TButton', relief='flat', background=COR_BACKGROUND_TOOLBAR, foreground=COR_FOREGROUND_TOOLBAR, font=('Segoe Ui', 10, 'bold'))
         self.style.map('ToolBar.TButton', background=[('active', COR_BOTAO_HOVER_TOOLBAR)])
 
         self.style.configure('Controls.TFrame', background=COR_BACKGROUND_CONTROLES)

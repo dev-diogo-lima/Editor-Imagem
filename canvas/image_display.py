@@ -81,38 +81,46 @@ class CanvasDinamico(tk.Canvas):
 
 if __name__ == '__main__':
     root = tk.Tk()
+    root.geometry('600x400')
+    root.minsize(600, 400)
+    root.title('Editor Foto (Beta)')
     style = ttk.Style(root)
+    style.theme_use('clam')
+    style.configure('ToolBar.TButton', relief='flat')
 
-    root.grid_columnconfigure([0, 1, 2], weight=1)
-    root.grid_rowconfigure(0, weight=1)
+    root.grid_columnconfigure(0, weight=1)
+    # root.grid_rowconfigure(0, weight=1)
+    root.grid_rowconfigure(1, weight=1)
 
     canvas = CanvasDinamico(root)
-    canvas.grid(row=0, column=0, columnspan=3, sticky='nswe')
+    canvas.grid(row=1, column=0, sticky='nswe', pady=(5, 0))
+    
 
     frame_sliders = ttk.Frame(root)   
-    frame_sliders.grid(row=2, column=0, columnspan=3, sticky='nswe')
-    frame_sliders
-    frame_sliders.grid_columnconfigure(1, weight=1)
+    frame_sliders.grid(row=2, column=0, columnspan=3, sticky='we', padx=5)
+    frame_sliders.grid_columnconfigure(0, weight=1)
 
-    botao_carregar = ttk.Button(root, text='carregar', command=canvas.carregar_imagem)
-    botao_carregar.grid(row=1, column=0)
-    botao_atualizar = ttk.Button(root, text='Reset', command=canvas.reset)
-    botao_atualizar.grid(row=1, column=1)
-    botao_export = ttk.Button(root, text='Export', command=canvas.export)
-    botao_export.grid(row=1, column=2)
 
-    label_brilho = ttk.Label(frame_sliders, text='Brilho: ')
-    label_brilho.grid(row=0, column=0, sticky='w')
-    slider_brilho = tk.Scale(frame_sliders, orient='horizontal', from_=-255, to=255, variable=canvas.val_brilho, digits=1, command=canvas.atualizar_imagem, resolution=2, showvalue=False)
-    slider_brilho.grid(row=0, column=1, sticky='we')
-    label_contraste_min = ttk.Label(frame_sliders, text='contraste_min: ')
-    label_contraste_min.grid(row=1, column=0, sticky='w')
-    slider_contraste_min = tk.Scale(frame_sliders, orient='horizontal', from_=0, to=255, variable=canvas.val_contraste_min, digits=1, command=canvas.atualizar_imagem, resolution=2, showvalue=False)
-    slider_contraste_min.grid(row=1, column=1, sticky='we')
-    label_contraste_max = ttk.Label(frame_sliders, text='contraste_min: ')
-    label_contraste_max.grid(row=2, column=0, sticky='w')
-    slider_contraste_max = tk.Scale(frame_sliders, orient='horizontal', from_=1, to=255, variable=canvas.val_contraste_max, digits=1, command=canvas.atualizar_imagem, resolution=2, showvalue=False)
-    slider_contraste_max.grid(row=2, column=1, sticky='we')
+    frame_toolbar = ttk.Frame(root)
+    frame_toolbar.grid(row=0, column=0, sticky='we')
+    # frame_toolbar.grid_columnconfigure(0, weight=1)
+    botao_carregar = ttk.Button(frame_toolbar, text='Load', command=canvas.carregar_imagem, padding=0)
+    botao_carregar.grid(row=0, column=0, pady=5)
+    botao_atualizar = ttk.Button(frame_toolbar, text='Reset', command=canvas.reset, padding=0)
+    botao_atualizar.grid(row=0, column=1, pady=5)
+    botao_export = ttk.Button(frame_toolbar, text='Export', command=canvas.export, padding=0)
+    botao_export.grid(row=0, column=2, pady=5)
+
+    for botao in frame_toolbar.winfo_children():
+        botao.configure(style='ToolBar.TButton')
+        botao.grid_configure(sticky='w')
+
+    slider_brilho = tk.Scale(frame_sliders, orient='horizontal', from_=-255, to=255, variable=canvas.val_brilho, digits=1, command=canvas.atualizar_imagem, resolution=2, showvalue=False, label='Brightness')
+    slider_brilho.grid(row=0, column=0, sticky='we')
+    slider_contraste_min = tk.Scale(frame_sliders, orient='horizontal', from_=0, to=255, variable=canvas.val_contraste_min, digits=1, command=canvas.atualizar_imagem, resolution=2, showvalue=False, label='Contrast (max)')
+    slider_contraste_min.grid(row=1, column=0, sticky='we')
+    slider_contraste_max = tk.Scale(frame_sliders, orient='horizontal', from_=1, to=255, variable=canvas.val_contraste_max, digits=1, command=canvas.atualizar_imagem, resolution=2, showvalue=False, label='Contrast (min)')
+    slider_contraste_max.grid(row=2, column=0, sticky='we')
 
 
     root.mainloop()
